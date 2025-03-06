@@ -12,7 +12,13 @@ export class InvoicesService {
     return this.prisma.invoice.findUnique({
       where: invoiceWhereUniqueInput,
       include: {
-        user: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          }
+        }
       },
     });
   }
@@ -32,8 +38,14 @@ export class InvoicesService {
       where,
       orderBy,
       include: {
-        user: true,
-      },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          }
+        },
+      }
     });
   }
 

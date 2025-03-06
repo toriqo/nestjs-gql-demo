@@ -19,8 +19,34 @@ input UpdateUserInput {
   password: String
 }
 
+input WhereInput {
+  AND: [WhereInput]
+  OR: [WhereInput]
+  NOT: [WhereInput]
+  contains: String
+  startsWith: String
+  endsWith: String
+  equals: String
+  in: [String]
+  notIn: [String]
+}
+
+input UserFilter {
+  id: WhereInput
+  name: WhereInput
+  email: WhereInput
+}
+
+input UserFilterInput {
+  skip: Int
+  take: Int
+  where: UserFilter
+  cursor: UserFilter
+  orderBy: UserFilter
+}
+
 type Query {
-  users: [User]!
+  users(params: UserFilterInput): [User]!
   user(id: ID!): User
 }
 

@@ -27,8 +27,34 @@ input UpdateInvoiceInput {
   paid: Boolean
 }
 
+input WhereInput {
+  AND: [WhereInput]
+  OR: [WhereInput]
+  NOT: [WhereInput]
+  contains: String
+  startsWith: String
+  endsWith: String
+  equals: String
+  in: [String]
+  notIn: [String]
+}
+
+input InvoiceFilter {
+  id: WhereInput
+  name: WhereInput
+  email: WhereInput
+}
+
+input InvoiceFilterInput {
+  skip: Int
+  take: Int
+  where: UserFilter
+  cursor: UserFilter
+  orderBy: UserFilter
+}
+
 type Query {
-  invoices: [Invoice]!
+  invoices(params: InvoiceFilterInput): [Invoice]!
   invoice(id: ID!): Invoice
 }
 

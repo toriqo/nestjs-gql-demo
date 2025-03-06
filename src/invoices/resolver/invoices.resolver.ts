@@ -5,7 +5,7 @@ import { UpdateInvoiceInput } from '../dto/update-invoice.input';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { CurrentUser } from 'src/auth/decorator/user.decorator';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 
 @Resolver('Invoice')
 @UseGuards(JwtAuthGuard)
@@ -18,8 +18,8 @@ export class InvoicesResolver {
   }
 
   @Query('invoices')
-  async findAll(@CurrentUser() currentUser: Partial<User>) {
-    return await this.invoicesService.invoices({ where: { userId: currentUser.id } });
+  async findAll(@Args('params') params: { skip?: number, take?: number, cursor?: Prisma.InvoiceWhereUniqueInput, where?: Prisma.InvoiceWhereInput, orderBy?: Prisma.InvoiceOrderByWithRelationInput }, @CurrentUser() currentUser: Partial<User>) {
+    return await this.invoicesService.invoices({ ...params, where: { ...params.where, userId: currentUser.id } });
   }
 
   @Query('invoice')

@@ -4,7 +4,7 @@ import { CreateUserInput } from '../dto/create-user.input';
 import { UpdateUserInput } from '../dto/update-user.input';
 import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { CurrentUser } from 'src/auth/decorator/user.decorator';
 
 @Resolver('User')
@@ -18,8 +18,8 @@ export class UsersResolver {
   }
 
   @Query('users')
-  findAll(@CurrentUser() currentUser: Partial<User>) {
-    return this.usersService.users({ where: { id: currentUser.id }, omit: { password: true } });
+  findAll(@Args('params') params: { skip?: number, take?: number, cursor?: Prisma.UserWhereUniqueInput, where?: Prisma.UserWhereInput, orderBy?: Prisma.UserOrderByWithRelationInput }, @CurrentUser() currentUser: Partial<User>) {
+    return this.usersService.users({ ...params, where: { ...params.where, id: currentUser.id }, omit: { password: true } });
   }
 
   @Query('user')
